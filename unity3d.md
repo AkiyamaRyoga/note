@@ -1,0 +1,54 @@
+# Game Objects and Scripts
+Transform里的Rotation是绕自身中心的旋转，如果想让Object绕某点旋转，可以在该Object外面包一层空的父Object,将其Transform Reset，然后将父Object的Position设置为旋转点的坐标，然后将父Object的Rotation设置为最初需要的旋转量。如果最后不想要这个父Object，可以直接将原Object拖拽移除层级关系，当这样做时，Unity会自动修改原Object的Transform以保持它在世界空间中不变。
+
+类的默认访问修饰符是internal
+
+[FormerlySerializedAs("name")] 属性可以保存名为name的变量的值，即使改变变量的名字。
+
+Unity会在组件被创建或者加载后调用它的Awake函数，Awake的访问权限不需要声明为public。
+
+Property是一种类似于字段的函数，它可能是只读或者只写的。
+
+Time.time Property返回自进入play模式后经过的时间。
+
+DateTime.Now Property返回一个DateTime值，保存了当前系统日期和时间。
+
+DateTime.TimeOfDay Property返回精确的小数时间。
+
+Quaternion.Euler函数可以用欧拉角创建四元数。
+
+localRotation指的是Transform组件的实际旋转，与它的父节点的旋转独立，也就是在Editor的Inspector上看到的值。
+
+rotation property指的是Transform组件在世界坐标系的最终旋转，考虑了它的父节点的变换。
+
+# Building a Graph Visualizing Math
+
+Object.Instantiate可以创建Prefab的实例。
+
+[Range(min, max)] attribute可以给代码附加元数据以在Inspctor窗口中给数值输入域以滑块显示。它不保证值一定被限制在范围内，仅仅只影响滑块的范围。
+
+Transform Component的SetParent函数设置父节点。同样，Unity会保持Object在世界空间中的原始位置、旋转和缩放。如果不需要，可以将第二个参数传入false。
+
+可以通过MonoBehaviour的transform property访问其Game object的Transform compoenent。
+
+# Mathematical Surface
+static函数
+
+*0.5f和 /2f 用*0.5f，因为乘法比除法运算更快。
+
+# Constructing a Fractal
+MonoBehaviour的Start函数的调用时机是在组件被创建后，一旦active，并且在第一次Update函数调用之前。只会被执行一次。Awake在所有对象的Start之前调用，而且不管是否是active
+
+gameObject.AddComponent<T>()可以动态添加组件到game object上，并返回组件的引用。
+
+new GameObject用于创建对象或结构体的实例。对象创建后，Awake和OnEnable函数会被调用，如果有的话。下一帧才会调用Start函数。
+
+Game Objects的Parent-child relationship是通过他们的Transform层级确定的。
+
+Coroutine需要返回IEnumetator类型，作为StartCoroutine函数的参数，然后在Coroutine中yield return new WaitForSeconds(time)可以在该函数中暂停而不影响整个程序的继续运行。
+
+Enumeration指在一次一个元素元素的遍历集合。Enumerator或者说Iterator是一个提供了实现这个功能接口的对象。
+
+yield语句被Iterator用来make life easy。为了使Enumeration可能，你需要追踪你的进度。这包含了一些基本上总是一样的样板代码。你想做的仅仅是写出return firstItem; return secondItem;这样的代码。yield语句允许你这么做。不论你什么时候使用了yield，背后都会创建一个Enumerator对象来处理这些繁琐的细节。这就是为什么Coroutine需要返回IEnumerator类型的原因。
+
+Coroutine原理: 在Unity中创建一个Coroutine，实际上是创建了一个Iterator。当把它传进StartCoroutine函数中时，它会被保存下来，并且每一帧询问下一个Item直到遍历完成。yield语句产生这些item。在yield语句之间的代码，只是iterator完成它的工作的附带作用。你可以yield像WaitForSeconds这样的来对你自己的代码什么时候继续执行拥有更多的控制
